@@ -1,0 +1,5 @@
+﻿# Common IDEs
+.idea/*
+!.idea/.idea.NBT.dir/.idea/codeStyles/
+!.idea/.idea.NBT.dir/.idea/fileTemplates/
+nbproject/*
