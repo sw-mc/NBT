@@ -1,4 +1,4 @@
-﻿using SkyWing.NBT.Serializer;
+﻿using SkyWing.NBT.Serialization;
 
 namespace SkyWing.NBT.Tag; 
 
@@ -14,8 +14,8 @@ public class ByteArrayTag : ImmutableTag{
 		return _value;
 	}
 
-	public override int GetTagType() {
-		return NBT.TAG_ByteArray;
+	public override byte GetTagType() {
+		return (byte)TagType.ByteArray;
 	}
 
 	public override void Write(NbtStreamWriter writer) {

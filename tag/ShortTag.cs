@@ -1,4 +1,4 @@
-﻿using SkyWing.NBT.Serializer;
+﻿using SkyWing.NBT.Serialization;
 
 namespace SkyWing.NBT.Tag; 
 
@@ -14,16 +14,16 @@ public class ShortTag : ImmutableTag {
 		return _value;
 	}
 
-	public override int GetTagType() {
-		return NBT.TAG_Short;
+	public override byte GetTagType() {
+		return (byte) TagType.Short;
 	}
 
 	public override void Write(NbtStreamWriter writer) {
-		writer.WriteShort(_value);
+		writer.WriteSignedShort(_value);
 	}
 	
 	public static ShortTag Read(NbtStreamReader reader) {
-		return new ShortTag(reader.ReadSignedShort());
+		return new ShortTag(reader.ReadInt16());
 	}
 
 	public override string GetTypeName() {

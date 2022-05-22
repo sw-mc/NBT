@@ -1,5 +1,5 @@
 ﻿using System.Text;
-using SkyWing.NBT.Serializer;
+using SkyWing.NBT.Serialization;
 using SkyWing.NBT.Utils;
 
 namespace SkyWing.NBT.Tag;
@@ -99,7 +99,11 @@ public class CompoundTag : Tag {
 		return (int[]) GetTagValue(name, typeof(IntArrayTag), def);
 	}
 	
-	public void SetByte(string name, sbyte value) {
+	public long[] GetLongArray(string name, long[]? def = null) {
+		return (long[]) GetTagValue(name, typeof(LongArrayTag), def);
+	}
+	
+	public void SetByte(string name, byte value) {
 		SetTag(name, new ByteTag(value));
 	}
 	
@@ -134,9 +138,13 @@ public class CompoundTag : Tag {
 	public void SetIntArray(string name, int[] value) {
 		SetTag(name, new IntArrayTag(value));
 	}
+	
+	public void SetLongArray(string name, long[] value) {
+		SetTag(name, new LongArrayTag(value));
+	}
 
-	public override int GetTagType() {
-		return NBT.TAG_Compound;
+	public override byte GetTagType() {
+		return (byte)TagType.Compound;
 	}
 
 	public override void Write(NbtStreamWriter writer) {
@@ -146,14 +154,14 @@ public class CompoundTag : Tag {
 			value.Write(writer);
 		}
 
-		writer.WriteByte(NBT.TAG_End);
+		writer.WriteByte((byte)TagType.Compound);
 	}
 
 	public static CompoundTag Read(NbtStreamReader reader) {
 		var result = new CompoundTag();
-		for (var tagType = reader.ReadByte(); tagType != NBT.TAG_End; tagType = reader.ReadByte()) {
+		for (var tagType = reader.ReadByte(); tagType != (byte)TagType.End; tagType = reader.ReadByte()) {
 			var name = reader.ReadString();
-			var tag = NBT.CreateTag(tagType, reader);
+			var tag = NBT.CreateTag((TagType)tagType, reader);
 			result.SetTag(name, tag);
 		}
 

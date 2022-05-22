@@ -1,20 +1,20 @@
 ﻿using System.Text;
-using SkyWing.NBT.Serializer;
+using SkyWing.NBT.Serialization;
 using SkyWing.NBT.Utils;
 
-namespace SkyWing.NBT.Tag; 
+namespace SkyWing.NBT.Tag;
 
 public class ListTag : Tag {
 
-	private int TagType { get; set; }
+	private byte Type { get; set; }
 
 	private readonly List<Tag> _value = new();
 
-	private ListTag(Tag[] value, int tagType = NBT.TAG_End){
-		TagType = tagType;
+	private ListTag(IEnumerable<Tag> value, byte tagType = (byte)TagType.End) {
+		Type = tagType;
 		_value.AddRange(value);
 	}
-	
+
 	public override Tag[] GetValue() {
 		return _value.ToArray();
 	}
@@ -24,6 +24,7 @@ public class ListTag : Tag {
 		for (var i = 0; i < _value.Count; i++) {
 			result[i] = _value[i].GetValue();
 		}
+
 		return result;
 	}
 
@@ -33,24 +34,24 @@ public class ListTag : Tag {
 		CheckTagType(tag);
 		_value.Add(tag);
 	}
-	
+
 	public Tag GetLast() {
 		var tag = _value[^1];
 		_value.Remove(tag);
 		return tag;
 	}
-	
+
 	public void AddFirst(Tag tag) {
 		CheckTagType(tag);
 		_value.Insert(0, tag);
 	}
-	
+
 	public Tag GetFirst() {
 		var tag = _value[0];
 		_value.Remove(tag);
 		return tag;
 	}
-	
+
 	public void Insert(int offset, Tag tag) {
 		CheckTagType(tag);
 		_value.Insert(offset, tag);
@@ -60,42 +61,40 @@ public class ListTag : Tag {
 		if (offset < 0 || _value.Count <= offset) {
 			throw new IndexOutOfRangeException();
 		}
-		
+
 		return _value[offset];
 	}
-	
+
 	public Tag First() {
 		return _value[0];
 	}
-	
+
 	public Tag Last() {
 		return _value[^1];
 	}
-	
+
 	public void Set(int offset, Tag tag) {
 		CheckTagType(tag);
 		_value[offset] = tag;
 	}
-	
+
 	public bool Empty() {
 		return _value.Count == 0;
 	}
-	
-	
 
-	public override int GetTagType() {
-		return NBT.TAG_List;
+	public override byte GetTagType() {
+		return (byte) TagType.List;
 	}
-	
+
 	public override string GetTypeName() {
 		return "ListTag";
 	}
 
 	private void CheckTagType(Tag tag) {
 		var type = tag.GetTagType();
-		if (type == TagType) return;
-		if (TagType == NBT.TAG_End) {
-			TagType = type;
+		if (type == Type) return;
+		if (Type == (byte)TagType.End) {
+			Type = type;
 		}
 		else {
 			throw new UnexpectedTagTypeException(
@@ -104,7 +103,7 @@ public class ListTag : Tag {
 	}
 
 	public override void Write(NbtStreamWriter writer) {
-		writer.WriteByte(Convert.ToByte(TagType));
+		writer.WriteByte(Convert.ToByte(Type));
 		writer.WriteInt(Count);
 		foreach (var tag in _value) {
 			tag.Write(writer);
@@ -113,25 +112,24 @@ public class ListTag : Tag {
 
 	public static ListTag Read(NbtStreamReader reader) {
 		var tagType = reader.ReadByte();
-		var count = reader.ReadInt();
+		var count = reader.ReadInt32();
 		var tags = new Tag[count];
 
 		if (count > 0) {
-			if (tagType == NBT.TAG_End)
+			if (tagType == (byte) TagType.End)
 				throw new NbtDataException("Unexpected non-empty list of TAG_End");
 
 			for (var i = 0; i < count; i++) {
-				tags[i] = NBT.CreateTag(tagType, reader);
+				tags[i] = NBT.CreateTag((TagType) tagType, reader);
 
 			}
 		}
 		else {
-			tagType = NBT.TAG_End;
+			tagType = (byte) TagType.End;
 		}
 
 		return new ListTag(tags, tagType);
 	}
-
 
 	public override string StringifyValue(int indentation) {
 		var sb = new StringBuilder();

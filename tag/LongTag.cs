@@ -1,4 +1,4 @@
-﻿using SkyWing.NBT.Serializer;
+﻿using SkyWing.NBT.Serialization;
 
 namespace SkyWing.NBT.Tag; 
 
@@ -14,8 +14,8 @@ public class LongTag : ImmutableTag{
 		return _value;
 	}
 
-	public override int GetTagType() {
-		return NBT.TAG_Long;
+	public override byte GetTagType() {
+		return (byte) TagType.Long;
 	}
 
 	public override void Write(NbtStreamWriter writer) {
@@ -23,7 +23,7 @@ public class LongTag : ImmutableTag{
 	}
 	
 	public static LongTag Read(NbtStreamReader reader) {
-		return new LongTag(reader.ReadLong());
+		return new LongTag(reader.ReadInt64());
 	}
 
 	public override string GetTypeName() {

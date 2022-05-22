@@ -1,4 +1,4 @@
-﻿using SkyWing.NBT.Serializer;
+﻿using SkyWing.NBT.Serialization;
 using SkyWing.NBT.Utils;
 
 namespace SkyWing.NBT.Tag; 
@@ -12,7 +12,7 @@ public abstract class Tag {
 
 	public abstract object GetValue();
 
-	public abstract int GetTagType();
+	public abstract byte GetTagType();
 	
 	public abstract void Write(NbtStreamWriter writer);
 
