@@ -1,6 +1,4 @@
-﻿using SkyWing.NBT.Tag;
-
-namespace DefaultNamespace; 
+﻿namespace SkyWing.NBT.Tag; 
 
 public class TreeRoot {
 
