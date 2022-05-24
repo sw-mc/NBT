@@ -31,6 +31,6 @@ public class LongArrayTag : ImmutableTag {
 	}
 
 	public override string StringifyValue(int indentation) {
-		return "implode:" + string.Join('.', _value);
+		return "implode: " + string.Join('.', _value);
 	}
 }

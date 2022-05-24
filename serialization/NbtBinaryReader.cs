@@ -5,7 +5,7 @@ using SkyWing.NBT.Utils;
 
 namespace SkyWing.NBT.Serialization;
 
-internal sealed class NbtBinaryReader : BinaryReader, NbtStreamReader {
+public class NbtBinaryReader : BinaryReader, NbtStreamReader {
     
     private readonly byte[] _buffer = new byte[sizeof(double)];
     private readonly byte[] _seekBuffer = Array.Empty<byte>();

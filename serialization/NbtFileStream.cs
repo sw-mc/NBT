@@ -31,7 +31,7 @@ public class NbtFileStream : BaseNbtStream {
 
 	static int _defaultBufferSize = 8 * 1024;
 
-	public static int BufferSize {
+	public int BufferSize {
 		get => _bufferSize;
 		set {
 			if (value < 0)
@@ -40,7 +40,7 @@ public class NbtFileStream : BaseNbtStream {
 		}
 	}
 
-	static int _bufferSize = 8 * 1024;
+	private int _bufferSize;
 
 	static NbtFileStream() {
 		BigEndianByDefault = true;
@@ -51,7 +51,7 @@ public class NbtFileStream : BaseNbtStream {
 		Stream = stream;
 		Compression = compression;
 		BigEndian = BigEndianByDefault;
-		BufferSize = _defaultBufferSize;
+		//BufferSize = _defaultBufferSize;
 		RootTag = rootTag ?? new TreeRoot(new CompoundTag(), tagName);
 	}
 
@@ -60,6 +60,7 @@ public class NbtFileStream : BaseNbtStream {
 			FileStreamBufferSize, FileOptions.SequentialScan);
 
 		var stream = new NbtFileStream(fileStream, compression);
+		stream.Reader = new NbtBinaryReader(fileStream, stream.BigEndian);
 		stream.LoadFromStream(compression);
 		return stream;
 	}
@@ -107,12 +108,13 @@ public class NbtFileStream : BaseNbtStream {
 			throw new EndOfStreamException();
 		}
 
-		if (firstByte != NBT.TAG_Compound) {
+		if (firstByte != (byte)TagType.Compound) {
 			throw new NbtDataException("Given NBT stream does not start with a TAG_Compound");
 		}
 
 		Reader = new NbtBinaryReader(readStream, BigEndian);
-		RootTag = new TreeRoot(CompoundTag.Read(Reader), Reader.ReadString());
+		var name = Reader.ReadString();
+		RootTag = new TreeRoot(NBT.CreateTag(TagType.Compound, Reader), name);
 	}
 
 	static NbtCompression DetectCompression(Stream stream) {
@@ -123,7 +125,7 @@ public class NbtFileStream : BaseNbtStream {
 		var firstByte = stream.ReadByte();
 		var compression = firstByte switch {
 			-1 => throw new EndOfStreamException(),
-			NBT.TAG_Compound => // 0x0A
+			(byte)TagType.Compound => // 0x0A
 				NbtCompression.None,
 			0x1F =>
 				// GZip magic number

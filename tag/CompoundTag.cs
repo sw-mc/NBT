@@ -159,10 +159,12 @@ public class CompoundTag : Tag {
 
 	public static CompoundTag Read(NbtStreamReader reader) {
 		var result = new CompoundTag();
-		for (var tagType = reader.ReadByte(); tagType != (byte)TagType.End; tagType = reader.ReadByte()) {
+		var tagType = reader.ReadByte();
+		while (tagType != (byte)TagType.End) {
 			var name = reader.ReadString();
 			var tag = NBT.CreateTag((TagType)tagType, reader);
 			result.SetTag(name, tag);
+			tagType = reader.ReadByte();
 		}
 
 		return result;
