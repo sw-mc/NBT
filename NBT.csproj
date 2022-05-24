@@ -8,7 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="BinaryUtils" Version="1.2.0-dev" />
+      <Content Include="NBT.sln.DotSettings.user" />
     </ItemGroup>
 
 </Project>
