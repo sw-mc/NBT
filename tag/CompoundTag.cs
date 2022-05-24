@@ -1,6 +1,7 @@
 ﻿using System.Text;
-using SkyWing.NBT.Serialization;
 using SkyWing.NBT.Utils;
+using StreamReader = SkyWing.Binary.StreamReader;
+using StreamWriter = SkyWing.Binary.StreamWriter;
 
 namespace SkyWing.NBT.Tag;
 
@@ -147,7 +148,7 @@ public class CompoundTag : Tag {
 		return (byte)TagType.Compound;
 	}
 
-	public override void Write(NbtStreamWriter writer) {
+	public override void Write(StreamWriter writer) {
 		foreach (var (key, value) in _value) {
 			writer.WriteByte(Convert.ToByte(value.GetTagType()));
 			writer.WriteString(key);
@@ -157,7 +158,7 @@ public class CompoundTag : Tag {
 		writer.WriteByte((byte)TagType.Compound);
 	}
 
-	public static CompoundTag Read(NbtStreamReader reader) {
+	public static CompoundTag Read(StreamReader reader) {
 		var result = new CompoundTag();
 		var tagType = reader.ReadByte();
 		while (tagType != (byte)TagType.End) {

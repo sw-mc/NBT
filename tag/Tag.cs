@@ -1,5 +1,5 @@
-﻿using SkyWing.NBT.Serialization;
-using SkyWing.NBT.Utils;
+﻿using SkyWing.NBT.Utils;
+using StreamWriter = SkyWing.Binary.StreamWriter;
 
 namespace SkyWing.NBT.Tag; 
 
@@ -14,7 +14,7 @@ public abstract class Tag {
 
 	public abstract byte GetTagType();
 	
-	public abstract void Write(NbtStreamWriter writer);
+	public abstract void Write(StreamWriter writer);
 
 	public override string ToString() {
 		return _ToString(0);

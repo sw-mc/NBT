@@ -1,6 +1,7 @@
 ﻿using System.Text;
-using SkyWing.NBT.Serialization;
 using SkyWing.NBT.Utils;
+using StreamReader = SkyWing.Binary.StreamReader;
+using StreamWriter = SkyWing.Binary.StreamWriter;
 
 namespace SkyWing.NBT.Tag;
 
@@ -102,7 +103,7 @@ public class ListTag : Tag {
 		}
 	}
 
-	public override void Write(NbtStreamWriter writer) {
+	public override void Write(StreamWriter writer) {
 		writer.WriteByte(Convert.ToByte(Type));
 		writer.WriteInt(Count);
 		foreach (var tag in _value) {
@@ -110,7 +111,7 @@ public class ListTag : Tag {
 		}
 	}
 
-	public static ListTag Read(NbtStreamReader reader) {
+	public static ListTag Read(StreamReader reader) {
 		var tagType = reader.ReadByte();
 		var count = reader.ReadInt32();
 		var tags = new Tag[count];

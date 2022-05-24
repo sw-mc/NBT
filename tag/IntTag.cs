@@ -1,4 +1,5 @@
-﻿using SkyWing.NBT.Serialization;
+﻿using StreamReader = SkyWing.Binary.StreamReader;
+using StreamWriter = SkyWing.Binary.StreamWriter;
 
 namespace SkyWing.NBT.Tag;
 
@@ -18,11 +19,11 @@ public class IntTag : ImmutableTag {
 		return (byte)TagType.Int;
 	}
 
-	public override void Write(NbtStreamWriter writer) {
+	public override void Write(StreamWriter writer) {
 		writer.WriteInt(_value);
 	}
 	
-	public static IntTag Read(NbtStreamReader reader) {
+	public static IntTag Read(StreamReader reader) {
 		return new IntTag(reader.ReadInt32());
 	}
 

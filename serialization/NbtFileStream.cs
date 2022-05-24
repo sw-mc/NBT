@@ -1,11 +1,12 @@
 ﻿using System.IO.Compression;
+using SkyWing.Binary;
 using SkyWing.NBT.Serialization.Compression;
 using SkyWing.NBT.Tag;
 using SkyWing.NBT.Utils;
 
 namespace SkyWing.NBT.Serialization;
 
-public class NbtFileStream : BaseNbtStream {
+public class NbtFileStream : BaseBinaryStream {
 
 	// Size of buffers that are used to avoid frequent reads from / writes to compressed streams
 	const int WriteBufferSize = 8 * 1024;

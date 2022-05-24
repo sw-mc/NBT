@@ -1,12 +1,12 @@
-﻿using SkyWing.NBT.Serialization;
-using SkyWing.NBT.Tag;
+﻿using SkyWing.NBT.Tag;
 using SkyWing.NBT.Utils;
+using StreamReader = SkyWing.Binary.StreamReader;
 
 namespace SkyWing.NBT; 
 
 public static class NBT {
 
-	public static Tag.Tag CreateTag(TagType type, NbtStreamReader reader) {
+	public static Tag.Tag CreateTag(TagType type, StreamReader reader) {
 		return type switch {
 			TagType.Byte => ByteTag.Read(reader),
 			TagType.Short => ShortTag.Read(reader),

@@ -11,4 +11,8 @@
       <Content Include="NBT.sln.DotSettings.user" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="BinaryUtils" Version="3.0.0-dev" />
+    </ItemGroup>
+
 </Project>
