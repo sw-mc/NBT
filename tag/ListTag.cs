@@ -1,7 +1,6 @@
 ﻿using System.Text;
+using SkyWing.NBT.Serialization;
 using SkyWing.NBT.Utils;
-using StreamReader = SkyWing.Binary.StreamReader;
-using StreamWriter = SkyWing.Binary.StreamWriter;
 
 namespace SkyWing.NBT.Tag;
 
@@ -103,27 +102,28 @@ public class ListTag : Tag {
 		}
 	}
 
-	public override void Write(StreamWriter writer) {
-		writer.WriteByte(Convert.ToByte(Type));
+	public override void Write(NbtStreamWriter writer) {
+		writer.WriteUnsignedByte(Type);
 		writer.WriteInt(Count);
 		foreach (var tag in _value) {
 			tag.Write(writer);
 		}
 	}
 
-	public static ListTag Read(StreamReader reader) {
-		var tagType = reader.ReadByte();
-		var count = reader.ReadInt32();
+	public static ListTag Read(NbtStreamReader reader, ReaderTracker tracker) {
+		var tagType = reader.ReadUnsignedByte();
+		var count = reader.ReadInt();
 		var tags = new Tag[count];
 
 		if (count > 0) {
 			if (tagType == (byte) TagType.End)
 				throw new NbtDataException("Unexpected non-empty list of TAG_End");
 
-			for (var i = 0; i < count; i++) {
-				tags[i] = NBT.CreateTag((TagType) tagType, reader);
-
-			}
+			tracker.ProtectDepth(_ => {
+				for (var i = 0; i < count; i++) {
+					tags[i] = NBT.CreateTag((TagType) tagType, reader, tracker);
+				}
+			});
 		}
 		else {
 			tagType = (byte) TagType.End;

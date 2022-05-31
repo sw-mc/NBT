@@ -1,5 +1,5 @@
-﻿using SkyWing.NBT.Utils;
-using StreamWriter = SkyWing.Binary.StreamWriter;
+﻿using SkyWing.NBT.Serialization;
+using SkyWing.NBT.Utils;
 
 namespace SkyWing.NBT.Tag; 
 
@@ -8,13 +8,13 @@ public abstract class Tag {
 	/**
 	 * Used for recursive cloning protection. (Cloning child tags)
 	 */
-	protected bool cloning = false;
+	protected bool Cloning = false;
 
 	public abstract object GetValue();
 
 	public abstract byte GetTagType();
 	
-	public abstract void Write(StreamWriter writer);
+	public abstract void Write(NbtStreamWriter writer);
 
 	public override string ToString() {
 		return _ToString(0);
@@ -29,13 +29,13 @@ public abstract class Tag {
 	public abstract string StringifyValue(int indentation);
 
 	public Tag SafeClone() {
-		if (cloning)
+		if (Cloning)
 			throw new NbtException("Recursive NBT tag dependency detected.");
-		cloning = true;
+		Cloning = true;
 
 		var retval = MakeCopy();
-		cloning = false;
-		retval.cloning = false;
+		Cloning = false;
+		retval.Cloning = false;
 		return retval;
 	}
 

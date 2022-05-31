@@ -1,6 +1,5 @@
 ﻿using System.Globalization;
-using StreamReader = SkyWing.Binary.StreamReader;
-using StreamWriter = SkyWing.Binary.StreamWriter;
+using SkyWing.NBT.Serialization;
 
 namespace SkyWing.NBT.Tag; 
 
@@ -20,11 +19,11 @@ public class DoubleTag : ImmutableTag {
 		return (byte)TagType.Double;
 	}
 
-	public override void Write(StreamWriter writer) {
+	public override void Write(NbtStreamWriter writer) {
 		writer.WriteDouble(_value);
 	}
 	
-	public static DoubleTag Read(StreamReader reader) {
+	public static DoubleTag Read(NbtStreamReader reader) {
 		return new DoubleTag(reader.ReadDouble());
 	}
 

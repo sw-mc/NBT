@@ -1,12 +1,12 @@
-﻿using SkyWing.NBT.Tag;
+﻿using SkyWing.NBT.Serialization;
+using SkyWing.NBT.Tag;
 using SkyWing.NBT.Utils;
-using StreamReader = SkyWing.Binary.StreamReader;
 
 namespace SkyWing.NBT; 
 
 public static class NBT {
 
-	public static Tag.Tag CreateTag(TagType type, StreamReader reader) {
+	public static Tag.Tag CreateTag(TagType type, NbtStreamReader reader, ReaderTracker tracker) {
 		return type switch {
 			TagType.Byte => ByteTag.Read(reader),
 			TagType.Short => ShortTag.Read(reader),
@@ -16,8 +16,8 @@ public static class NBT {
 			TagType.Double => DoubleTag.Read(reader),
 			TagType.ByteArray => ByteArrayTag.Read(reader),
 			TagType.String => StringTag.Read(reader),
-			TagType.List => ListTag.Read(reader),
-			TagType.Compound => CompoundTag.Read(reader),
+			TagType.List => ListTag.Read(reader, tracker),
+			TagType.Compound => CompoundTag.Read(reader, tracker),
 			TagType.IntArray => IntArrayTag.Read(reader),
 			TagType.LongArray => LongArrayTag.Read(reader),
 			_ => throw new NoSuchTagException("Unknown NBT tag type: " + type)
