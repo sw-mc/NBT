@@ -4,9 +4,9 @@ namespace SkyWing.NBT.Tag;
 
 public class ByteTag : ImmutableTag {
 
-	private readonly sbyte _value;
+	private readonly byte _value;
 	
-	public ByteTag(sbyte value) {
+	public ByteTag(byte value) {
 		_value = value;
 	}
 	

@@ -103,7 +103,7 @@ public class CompoundTag : Tag {
 		return (long[]) GetTagValue(name, typeof(LongArrayTag), def);
 	}
 	
-	public void SetByte(string name, sbyte value) {
+	public void SetByte(string name, byte value) {
 		SetTag(name, new ByteTag(value));
 	}
 	
@@ -149,23 +149,23 @@ public class CompoundTag : Tag {
 
 	public override void Write(NbtStreamWriter writer) {
 		foreach (var (key, value) in _value) {
-			writer.WriteUnsignedByte(value.GetTagType());
+			writer.WriteByte(value.GetTagType());
 			writer.WriteString(key);
 			value.Write(writer);
 		}
 
-		writer.WriteUnsignedByte((byte)TagType.Compound);
+		writer.WriteByte((byte)TagType.Compound);
 	}
 
 	public static CompoundTag Read(NbtStreamReader reader, ReaderTracker tracker) {
 		var result = new CompoundTag();
 		tracker.ProtectDepth(_ => {
-			var tagType = reader.ReadUnsignedByte();
+			var tagType = reader.ReadByte();
 			while (tagType != (byte)TagType.End) {
 				var name = reader.ReadString();
 				var tag = NBT.CreateTag((TagType)tagType, reader, tracker);
 				result.SetTag(name, tag);
-				tagType = reader.ReadUnsignedByte();
+				tagType = reader.ReadByte();
 			}
 		});
 

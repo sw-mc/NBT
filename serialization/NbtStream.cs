@@ -4,13 +4,13 @@ namespace SkyWing.NBT.Serialization;
 
 public interface NbtStreamReader {
 
-	public sbyte ReadByte();
+	public byte ReadByte();
 	
-	public byte ReadUnsignedByte();
+	public sbyte ReadSignedByte();
 	
 	public short ReadShort();
 	
-	public ushort ReadUnsignedShort();
+	public short ReadSignedShort();
 
 	public int ReadInt();
 	
@@ -32,13 +32,9 @@ public interface NbtStreamReader {
 
 public interface NbtStreamWriter {
 	
-	public void WriteByte(sbyte value);
-	
-	public void WriteUnsignedByte(byte value);
+	public void WriteByte(byte value);
 	
 	public void WriteShort(short value);
-	
-	public void WriteUnsignedShort(ushort value);
 	
 	public void WriteInt(int value);
 	

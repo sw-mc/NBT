@@ -103,7 +103,7 @@ public class ListTag : Tag {
 	}
 
 	public override void Write(NbtStreamWriter writer) {
-		writer.WriteUnsignedByte(Type);
+		writer.WriteByte(Type);
 		writer.WriteInt(Count);
 		foreach (var tag in _value) {
 			tag.Write(writer);
@@ -111,7 +111,7 @@ public class ListTag : Tag {
 	}
 
 	public static ListTag Read(NbtStreamReader reader, ReaderTracker tracker) {
-		var tagType = reader.ReadUnsignedByte();
+		var tagType = reader.ReadByte();
 		var count = reader.ReadInt();
 		var tags = new Tag[count];
 

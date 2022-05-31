@@ -14,7 +14,7 @@ public abstract class BaseNbtSerializer : NbtStreamReader, NbtStreamWriter {
 	}
 
 	private TreeRoot ReadRoot(int maxDepth) {
-		var type = ReadUnsignedByte();
+		var type = ReadByte();
 		if (type == (int) TagType.End)
 			throw new NbtDataException("Found TAG_End at the start of buffer");
 		
@@ -33,7 +33,7 @@ public abstract class BaseNbtSerializer : NbtStreamReader, NbtStreamWriter {
 	}
 
 	private void WriteRoot(TreeRoot root) {
-		WriteUnsignedByte(root.Root.GetTagType());
+		WriteByte(root.Root.GetTagType());
 		WriteString(root.Name);
 		root.Root.Write(this);
 	}
@@ -51,17 +51,17 @@ public abstract class BaseNbtSerializer : NbtStreamReader, NbtStreamWriter {
 		return Buffer;
 	}
 
-	public sbyte ReadByte() {
+	public byte ReadByte() {
 		return Buffer.ReadByte();
 	}
 
-	public byte ReadUnsignedByte() {
-		return Buffer.ReadUnsignedByte();
+	public sbyte ReadSignedByte() {
+		return BinaryStream.SignByte(ReadByte());
 	}
 
 	public abstract short ReadShort();
 
-	public abstract ushort ReadUnsignedShort();
+	public abstract short ReadSignedShort();
 
 	public abstract int ReadInt();
 	
@@ -72,29 +72,23 @@ public abstract class BaseNbtSerializer : NbtStreamReader, NbtStreamWriter {
 	public abstract double ReadDouble();
 
 	public byte[] ReadByteArray() {
-		return Buffer.ReadBytes((int) Buffer.ReadUnsignedInt());
+		return Buffer.ReadBytes(Buffer.ReadInt());
 	}
 
 	public string ReadString() {
-		return Encoding.UTF8.GetString(Buffer.ReadBytes(ReadUnsignedShort()));
+		return Encoding.UTF8.GetString(Buffer.ReadBytes(ReadShort()));
 	}
 
 	public abstract int[] ReadIntArray();
 
 	public abstract long[] ReadLongArray();
 
-	public void WriteByte(sbyte value) {
+	public void WriteByte(byte value) {
 		Buffer.WriteByte(value);
 	}
 
-	public void WriteUnsignedByte(byte value) {
-		Buffer.WriteUnsignedByte(value);
-	}
-
 	public abstract void WriteShort(short value);
-
-	public abstract void WriteUnsignedShort(ushort value);
-
+	
 	public abstract void WriteInt(int value);
 	
 	public abstract void WriteLong(long value);
@@ -109,7 +103,7 @@ public abstract class BaseNbtSerializer : NbtStreamReader, NbtStreamWriter {
 	}
 
 	public void WriteString(string value) {
-		WriteUnsignedShort((ushort)Encoding.UTF8.GetByteCount(value));
+		WriteShort((short) Encoding.UTF8.GetByteCount(value));
 		Buffer.WriteBytes(Encoding.UTF8.GetBytes(value));
 	}
 
@@ -124,8 +118,8 @@ public class BigEndianNbtSerializer : BaseNbtSerializer {
 		return Buffer.ReadShort();
 	}
 
-	public override ushort ReadUnsignedShort() {
-		return Buffer.ReadUnsignedShort();
+	public override short ReadSignedShort() {
+		return Buffer.ReadSignedShort();
 	}
 
 	public override int ReadInt() {
@@ -164,10 +158,6 @@ public class BigEndianNbtSerializer : BaseNbtSerializer {
 		Buffer.WriteShort(value);
 	}
 
-	public override void WriteUnsignedShort(ushort value) {
-		Buffer.WriteUnsignedShort(value);
-	}
-
 	public override void WriteInt(int value) {
 		Buffer.WriteInt(value);
 	}
@@ -204,8 +194,8 @@ public class LittleEndianNbtSerializer : BaseNbtSerializer {
 		return Buffer.ReadLShort();
 	}
 
-	public override ushort ReadUnsignedShort() {
-		return Buffer.ReadUnsignedLShort();
+	public override short ReadSignedShort() {
+		return Buffer.ReadSignedLShort();
 	}
 
 	public override int ReadInt() {
@@ -242,10 +232,6 @@ public class LittleEndianNbtSerializer : BaseNbtSerializer {
 
 	public override void WriteShort(short value) {
 		Buffer.WriteLShort(value);
-	}
-
-	public override void WriteUnsignedShort(ushort value) {
-		Buffer.WriteUnsignedLShort(value);
 	}
 
 	public override void WriteInt(int value) {
