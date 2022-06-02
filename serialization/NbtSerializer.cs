@@ -21,7 +21,7 @@ public abstract class BaseNbtSerializer : NbtStreamReader, NbtStreamWriter {
 		return new TreeRoot(NBT.CreateTag((TagType) type, this, new ReaderTracker(maxDepth)), ReadString());
 	}
 
-	public TreeRoot Read(Stream buffer, int maxDepth) {
+	public TreeRoot Read(MemoryStream buffer, int maxDepth) {
 		Buffer = new BinaryStream(buffer);
 
 		try {
