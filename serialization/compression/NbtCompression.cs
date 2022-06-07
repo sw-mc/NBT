@@ -21,7 +21,7 @@ internal sealed class ZLibStream : DeflateStream {
 
 
 	void UpdateChecksum(IList<byte> data, int offset, int length) {
-		for (int counter = 0; counter < length; ++counter) {
+		for (var counter = 0; counter < length; ++counter) {
 			adler32A = (adler32A + (data[offset + counter])) % ChecksumModulus;
 			adler32B = (adler32B + adler32A) % ChecksumModulus;
 		}
